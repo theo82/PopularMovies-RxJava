@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+
+    <string name="movie_title_label">Title</string>
+    <string name="movie_release_date_label">Release Date</string>
+    <string name="movie_vote_average_label">User Rating</string>
+    <string name="movie_overview_label">Plot Synopsis</string>
+
+    <string name="sort_title">Sort</string>
+    <string name="favourites_title">My Favourites</string>
+    <string name="details_title">Details</string>
+
+    <string name="parcel_movie">PARCEL_MOVIE</string>
+
+    <string name="no_internet_connection">Please check your internet connection.</string>
+
+    <string name="no_favourite_movies">There is no favourite movies yet.</string>
+
+    <string name="settings_sort_by_list_label">Sort By:</string>
+    <string name="settings_sort_by_list_key">sort_by</string>
+    <string name="settings_sort_by_list_default">@string/settings_sort_by_most_popular_value</string>
+
+    <string name="settings_sort_by_highest_rated_label">Highest Rated</string>
+    <string name="settings_sort_by_highest_rated_value" translatable="false">top_rated</string>
+
+    <string name="settings_sort_by_most_popular_label">Most Popular</string>
+    <string name="settings_sort_by_most_popular_value" translatable="false">popular</string>
+
+    <string name="settings_sort_by_favourites_label">My Favourites</string>
+    <string name="settings_sort_by_favourites_value" translatable="false">favourites</string>
+
+    <string name="label_vote_display">%.1f/10</string>
+
+    <string name="sort_by_rating">Top Rated</string>
+    <string name="sort_by_popularity">Most Popular</string>
+    <string name="favourites">My Favourites</string>
+
+</resources>
