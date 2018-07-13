@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     private void gettingTopRatedMovies(){
 
+        /*
         Call<MoviesResponse> call = apiService.getTopRatedMovies(BuildConfig.MOVIESDB_API_KEY);
 
         call.enqueue(new Callback<MoviesResponse>() {
@@ -105,13 +106,30 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
                 adapter.setMoviesData(moviesArrayList);
             }
         });
+
+        */
+
+        compositeDisposable.add(apiService.getTopRatedMoviesRxJava(BuildConfig.MOVIESDB_API_KEY)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<MoviesResponse>() {
+                    @Override
+                    public void accept(MoviesResponse moviesResponses) throws Exception {
+                        List<Movie> movieList = moviesResponses.getResults();
+
+                        recyclerView.setAdapter(adapter);
+                        adapter.setMoviesData(movieList);
+                        Log.d(TAG, "Number of popular movies received: " + movieList.size());
+
+                    }
+                }));
     }
 
     private void gettingPopularMovies(){
 
-        /*
         call = apiService.getPopularMovies(BuildConfig.MOVIESDB_API_KEY);
 
+        /*
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
@@ -129,16 +147,21 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         });
         */
 
-        compositeDisposable.add(apiService.getPopularMovies(BuildConfig.MOVIESDB_API_KEY)
+        compositeDisposable.add(apiService.getPopularMoviesRxJava(BuildConfig.MOVIESDB_API_KEY)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Movie>>() {
+                .subscribe(new Consumer<MoviesResponse>() {
                     @Override
-                    public void accept(List<Movie> moviesResponses) throws Exception {
+                    public void accept(MoviesResponse moviesResponses) throws Exception {
+                        List<Movie> movieList = moviesResponses.getResults();
+
                         recyclerView.setAdapter(adapter);
-                        adapter.setMoviesData(moviesArrayList);
+                        adapter.setMoviesData(movieList);
+                        Log.d(TAG, "Number of popular movies received: " + movieList.size());
+
                     }
                 }));
+
     }
 
     @Override
@@ -151,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
                 editor1.putString(getString(R.string.settings_sort_by_list_key), POPULAR_MOVIES);
                 editor1.apply();
                 gettingPopularMovies();
-                adapter.notifyDataSetChanged();
+                //adapter.notifyDataSetChanged();
                 return true;
 
             case R.id.most_rated:
@@ -160,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
                 editor2.putString(getString(R.string.settings_sort_by_list_key), TOP_RATED_MOVIES);
                 editor2.apply();
                 gettingTopRatedMovies();
-                adapter.notifyDataSetChanged();
+                //adapter.notifyDataSetChanged();
                 return true;
         }
 
@@ -186,5 +209,13 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         savedInstanceState.getParcelableArrayList("key");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // don't send events once the activity is destroyed
+        compositeDisposable.clear();
     }
 }
