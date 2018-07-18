@@ -3,19 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.android.popularmoviesstagetwo.MainActivity">
 
-    <item
-        android:id="@+id/most_popular"
-        android:orderInCategory="1"
-        android:title="@string/sort_by_popularity"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/most_rated"
-        android:orderInCategory="2"
-        android:title="@string/sort_by_rating"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/favourite_movies"
-        android:orderInCategory="3"
-        android:title="@string/favourites"
-        app:showAsAction="never" />
+    <item android:id="@+id/action_settings" android:title="@string/action_settings"
+        android:orderInCategory="100" app:showAsAction="never" />
 </menu>

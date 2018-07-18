@@ -1,10 +1,12 @@
 package theo.tziomakas.popularmovies;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -74,7 +76,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setHasFixedSize(true);
 
-        gettingPopularMovies();
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        sortingCriteria = sharedPrefs.getString(getString(R.string.pref_sorting_criteria_key), getString(R.string.pref_sorting_criteria_default_value));
+
+            gettingPopularMovies();
 
     }
 
@@ -119,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
                         recyclerView.setAdapter(adapter);
                         adapter.setMoviesData(movieList);
-                        Log.d(TAG, "Number of popular movies received: " + movieList.size());
+                        Log.d(TAG, "Number of top rated movies received: " + movieList.size());
 
                     }
                 }));
@@ -167,27 +172,22 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()){
-            case R.id.most_popular:
+        int id = item.getItemId();
 
-                SharedPreferences.Editor editor1 = getSharedPreferences(getString(R.string.settings_sort_by_list_key), MODE_PRIVATE).edit();
-                editor1.putString(getString(R.string.settings_sort_by_list_key), POPULAR_MOVIES);
-                editor1.apply();
-                gettingPopularMovies();
-                //adapter.notifyDataSetChanged();
-                return true;
+        if(id == R.id.action_settings){
 
-            case R.id.most_rated:
+            Context context = MainActivity.this;
+            Class activityToBeLauched = SettingsActivity.class;
 
-                SharedPreferences.Editor editor2 = getSharedPreferences(getString(R.string.settings_sort_by_list_key), MODE_PRIVATE).edit();
-                editor2.putString(getString(R.string.settings_sort_by_list_key), TOP_RATED_MOVIES);
-                editor2.apply();
-                gettingTopRatedMovies();
-                //adapter.notifyDataSetChanged();
-                return true;
+            Intent intent = new Intent(context,activityToBeLauched);
+            startActivity(intent);
+
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
+
+
     }
 
     @Override
@@ -217,5 +217,23 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
         // don't send events once the activity is destroyed
         compositeDisposable.clear();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        sortingCriteria = sharedPrefs.getString(getString(R.string.pref_sorting_criteria_key), getString(R.string.pref_sorting_criteria_default_value));
+
+        if(sortingCriteria.equals("popular")) {
+
+            gettingPopularMovies();
+
+        }else if(sortingCriteria.equals("top_rated")){
+
+            gettingTopRatedMovies();
+
+        }
     }
 }

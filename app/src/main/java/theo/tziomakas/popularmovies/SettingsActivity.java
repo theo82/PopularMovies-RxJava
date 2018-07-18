@@ -12,13 +12,14 @@ import android.view.MenuItem;
  * Created by theodosiostziomakas on 29/12/2017.
  */
 
+
 public class SettingsActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.general_prefs);
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.settings_sort_by_list_key)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_sorting_criteria_key)));
     }
 
     private void bindPreferenceSummaryToValue(Preference preference) {
